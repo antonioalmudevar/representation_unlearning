@@ -1,0 +1,28 @@
+model:
+  name: "resnet18_cifar"
+  num_classes: 10
+
+dataset:
+  name: "cifar10"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+training:
+  epochs: 100
+  max_norm: 0.0
+  amp: true
+  deterministic: true
+
+optimizer:
+  name: "adamw"         # "adamw" | "adam" | "sgd" | "rmsprop" | "adagrad"
+  lr: 0.001
+  weight_decay: 0.0005
+  betas: [0.9, 0.999]
+
+scheduler:
+  name: "cosine"      # "cosine" | "onecycle" | "none"
+  pct_start: 0.3
+  div_factor: 25.0
+  final_div_factor: 10000.0

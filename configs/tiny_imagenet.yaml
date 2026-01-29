@@ -1,0 +1,25 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+
+training:
+  epochs: 160
+  max_norm: 0.0
+  amp: false
+  deterministic: true
+
+optimizer:
+  name: "adamw"
+  lr: 0.001
+  weight_decay: 0.0001
+
+scheduler:
+  name: "cosine"
+  warmup_epochs: 5

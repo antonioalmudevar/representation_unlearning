@@ -1,0 +1,24 @@
+model:
+  name: "wrn_28_10"
+  num_classes: 100
+
+dataset:
+  name: "cifar100"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+training:
+  epochs: 200
+  max_norm: 0.0
+  amp: false
+  deterministic: true
+
+optimizer:
+  name: "adamw"
+  lr: 0.001
+  weight_decay: 0.0005
+
+scheduler:
+  name: "cosine"

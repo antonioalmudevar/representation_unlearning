@@ -1,0 +1,27 @@
+model:
+  name: "wrn_16_8"      # WideResNet-16-8 works extremely well on SVHN
+  num_classes: 10
+
+dataset:
+  name: "svhn"
+  data_root: "/home/voz/shared/database/vision"
+  split: "train"         # internally your loader will handle train/val/test
+  batch_size: 256
+  num_workers: 8
+  has_val: true          # recommended: SVHN has no official val, so create 10% split
+
+training:
+  epochs: 40             # SVHN converges fast; 40–80 is common
+  max_norm: 0.0
+  amp: false
+  deterministic: true
+
+optimizer:
+  name: "adamw"
+  lr: 0.0005             # stable for SVHN; 1e-3 sometimes overshoots
+  weight_decay: 0.0005
+  betas: [0.9, 0.999]
+
+scheduler:
+  name: "cosine"
+  warmup_epochs: 3       # small warmup helps early phase on SVHN
