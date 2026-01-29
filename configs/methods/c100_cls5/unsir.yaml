@@ -1,0 +1,42 @@
+model:
+  name: "wrn_28_10"
+  num_classes: 100
+
+dataset:
+  name: "cifar100"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: &forget_classes [0,1,2,3,4]
+
+deterministic: true
+
+method:
+  name: unsir
+
+  # Noise learning (Eq. 1)
+  noise_batch_size: 32
+  noise_iters: 25
+  noise_lr: 0.01
+  noise_l2_lambda: 0.1     # λ in Eq. (1)
+  noise_clamp: 2.5
+  noise_copies: 20
+
+  # Impair/Repair (paper uses 1+1 epoch, high LR on impair for CIFAR-10)
+  impair_epochs: 3
+  repair_epochs: 1
+  impair_lr: 0.05
+  repair_lr: 0.01
+  weight_decay: 0.0
+  momentum: 0.9
+  max_norm: 0.0
+
+  # Retain subset
+  samples_per_retain_class: 1000
+
+  # classes (ids) to forget:
+  forget_classes: *forget_classes

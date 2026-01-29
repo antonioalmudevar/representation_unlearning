@@ -1,0 +1,32 @@
+model:
+  name: "wrn_28_10"
+  num_classes: 100
+
+dataset:
+  name: "cifar100"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+  
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0,1,2,3,4]
+
+deterministic: true
+
+method:
+  name: bad_teaching
+  # Fraction of retain data to use (paper uses ~30%)
+  retain_fraction: 0.3
+  # Number of unlearning epochs (paper uses 1-2)
+  epochs: 5                    
+  lr: 0.0005                   # Increased from 0.0001 to 0.0005: faster unlearning
+  weight_decay: 0.0005
+  momentum: 0.9
+  optimizer: sgd
+  max_norm: 0.0
+  # KL divergence temperature
+  temperature: 1.0             
+  # Type of incompetent teacher: "random_init" or "random_predictor"
+  incompetent_type: "random_predictor"  # Changed: usually more effective than random_init
