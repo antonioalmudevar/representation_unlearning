@@ -1,0 +1,40 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.10
+
+deterministic: true
+
+method:
+  name: sisa
+  
+  # Core SISA parameters - adjusted for better forgetting
+  shards: 20                    # INCREASED from 10 to 20
+  slices: 10                    # INCREASED from 5 to 10
+  epochs_per_slice: 1           # DECREASED from 2 to 1
+  
+  # Training hyperparameters
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 0.0005
+  
+  # Aggregation strategy
+  aggregation: "logits"
+  
+  # Data handling
+  batch_size: 128
+  shuffle_seed: 42
+  num_workers: 4
+  pin_memory: true
+  
+  # Logging
+  verbose: true

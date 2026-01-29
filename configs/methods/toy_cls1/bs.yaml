@@ -1,0 +1,38 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: boundary_shrink
+  # FGSM parameters for cross sample generation
+  eps: 0.25                  # Noise bound for FGSM
+  clamp_min: 0.0             # Min pixel value
+  clamp_max: 1.0             # Max pixel value
+  
+  # Fine-tuning parameters
+  ft_epochs: 10               # Decreased from 15: much less fine-tuning
+  ft_lr: 0.00001
+  ft_momentum: 0.9
+  ft_weight_decay: 0.0
+  batch_size: 128
+  max_norm: 0.0

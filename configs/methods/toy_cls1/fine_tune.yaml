@@ -1,0 +1,31 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: fine_tune
+  epochs: 10
+  lr: 0.001
+  weight_decay: 0.0005
+  optimizer: adam
+  max_norm: 0.0

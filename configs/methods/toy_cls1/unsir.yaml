@@ -1,0 +1,49 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: &forget_classes [0]
+
+deterministic: true
+
+method:
+  name: unsir
+
+  # Noise learning (Eq. 1)
+  noise_batch_size: 32
+  noise_iters: 25
+  noise_lr: 0.01
+  noise_l2_lambda: 0.1     # λ in Eq. (1)
+  noise_clamp: 2.5
+  noise_copies: 20
+
+  # Impair/Repair (paper uses 1+1 epoch, high LR on impair for CIFAR-10)
+  impair_epochs: 3
+  repair_epochs: 1
+  impair_lr: 0.05
+  repair_lr: 0.01
+  weight_decay: 0.0
+  momentum: 0.9
+  max_norm: 0.0
+
+  # Retain subset
+  samples_per_retain_class: 1000
+
+  # classes (ids) to forget:
+  forget_classes: *forget_classes

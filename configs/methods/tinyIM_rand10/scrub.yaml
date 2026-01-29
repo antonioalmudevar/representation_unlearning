@@ -1,0 +1,45 @@
+model:
+  name: "resnet18_cifar"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.10
+
+deterministic: true
+
+method:
+  name: scrub
+
+  # ---------- Optimization ----------
+  optimizer: "adam"           # "adam" | "adamw" | "sgd"
+  lr: 0.0005
+  weight_decay: 0.0005
+  momentum: 0.9               # used only for SGD
+  lr_decay_after: 2           # decay lr by ×0.1 after epoch 2 (optional)
+
+  # ---------- Alternating training ----------
+  # Paper values for ResNet + CIFAR-10 + class unlearning (Table 3, page 16)
+  max_steps: 1                # CORRECTED: Number of MAX (forget) epochs
+  min_steps: 15                # Number of MIN (retain) epochs
+  final_min_steps: 10          # Extra MIN-only epochs after alternating cycles
+  alpha: 0.5                  # Weight on KL divergence during MIN step
+  gamma: 1.0                  # Weight on CE loss during MIN step
+  clip_grad_norm: 1.0         # Clip gradients (set 0 or null to disable)
+
+  # ---------- CRITICAL: Separate batch sizes for forget/retain ----------
+  # Paper Table 3: Different batch sizes control iteration balance
+  batch_size_forget: 512      # ADDED: Batch size for forget set (class unlearning)
+  batch_size_retain: 128      # ADDED: Batch size for retain set (class unlearning)
+
+  # ---------- Rewind variant (SCRUB+R) ----------
+  rewind: false               # true → enable rewind selection for privacy (UP application)
+  # When true, the method will select the checkpoint whose forget error (train)
+  # is closest to the forget error (validation) of the final model.
+  # This helps defend against Membership Inference Attacks.

@@ -1,0 +1,30 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.1
+
+deterministic: true
+
+method:
+  name: representation_unlearning
+  
+  # --- Architecture Options ---
+  arch_type: "mlp"          # "mlp" or "linear"
+  hidden_dims: [1024, 1024]
+  
+  # --- Training Params ---
+  epochs: 10
+  lr: 0.001
+  beta: 0.001
+  n_samples: 1
+  zero_shot: false

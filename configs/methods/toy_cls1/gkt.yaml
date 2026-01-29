@@ -1,0 +1,40 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: gkt
+  
+  # Optimization (Snippet matches)
+  lr: 0.001
+  batch_size: 256
+  
+  # GKT Specifics
+  z_dim: 128
+  n_pseudo_batches: 4000  # These are CYCLES. Total steps = 4000 * 11 = 44,000.
+  n_generator_iter: 1
+  n_student_iter: 10
+  
+  at_beta: 250.0
+  kl_temperature: 1.0
+  threshold: 0.01         # Strict threshold works because we train for much longer

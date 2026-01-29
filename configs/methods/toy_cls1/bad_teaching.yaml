@@ -1,0 +1,39 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: bad_teaching
+  # Fraction of retain data to use (paper uses ~30%)
+  retain_fraction: 0.3
+  # Number of unlearning epochs (paper uses 1-2)
+  epochs: 5                    
+  lr: 0.0005                   # Increased from 0.0001 to 0.0005: faster unlearning
+  weight_decay: 0.0005
+  momentum: 0.9
+  optimizer: sgd
+  max_norm: 0.0
+  # KL divergence temperature
+  temperature: 1.0             
+  # Type of incompetent teacher: "random_init" or "random_predictor"
+  incompetent_type: "random_predictor"  # Changed: usually more effective than random_init

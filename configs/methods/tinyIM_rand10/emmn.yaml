@@ -1,0 +1,32 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.10
+
+deterministic: true
+
+method:
+  name: error_minmax_noise
+  
+  # Noise generation parameters
+  noise_batch_size: 256
+  noise_steps: 400
+  noise_lr: 0.1
+  noise_lr_decay: 0.5
+  noise_patience: 50
+  lambda_reg: 0.01
+  
+  # Model impair parameters (CIFAR-10: 2 steps, lr=0.01)
+  impair_steps: 2
+  impair_lr: 0.01
+  weight_decay: 0.0001
+  max_norm: 0.0

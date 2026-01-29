@@ -1,0 +1,48 @@
+model:
+  name: "toy_mlp"
+  input_dim: 10
+  repr_dim: 2
+  num_classes: 6
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+dataset:
+  name: "toy"
+  n_samples_per_class: 100
+  input_dim: 10
+  n_classes: 6
+  noise_std: 1.0
+  batch_size: 64
+  num_workers: 0
+  has_val: false
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: scrub
+
+  # ---------- Optimization ----------
+  optimizer: "adam"
+  lr: 0.005                   # Increased from 0.0005: 10× higher for toy dataset
+  weight_decay: 0.0005
+  momentum: 0.9
+  lr_decay_after: 15          # Increased from 2: keep high LR longer
+
+  # ---------- Alternating training ----------
+  max_steps: 20               # Increased from 10: much more forgetting
+  min_steps: 5                # Decreased from 8: less retention conflict
+  final_min_steps: 3          # Increased from 0: stabilize at end
+  alpha: 0.3                  # Decreased from 1.0: allow more divergence
+  gamma: 1.0
+  clip_grad_norm: 1.0
+
+  # ---------- CRITICAL: Separate batch sizes for forget/retain ----------
+  batch_size_forget: 10       # Decreased from 64: MUCH smaller for more updates
+  batch_size_retain: 64       # Increased from 16: larger to reduce retain updates
+
+  # ---------- Rewind variant (SCRUB+R) ----------
+  rewind: false
