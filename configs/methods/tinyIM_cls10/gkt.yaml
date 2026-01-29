@@ -1,0 +1,32 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0,1,2,3,4,5,6,7,8,9]
+
+deterministic: true
+
+method:
+  name: gkt
+  
+  # Optimization (Snippet matches)
+  lr: 0.001
+  batch_size: 256
+  
+  # GKT Specifics
+  z_dim: 128
+  n_pseudo_batches: 4000  # These are CYCLES. Total steps = 4000 * 11 = 44,000.
+  n_generator_iter: 1
+  n_student_iter: 10
+  
+  at_beta: 250.0
+  kl_temperature: 1.0
+  threshold: 0.01         # Strict threshold works because we train for much longer

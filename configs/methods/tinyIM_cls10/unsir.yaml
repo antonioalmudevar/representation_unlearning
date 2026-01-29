@@ -1,0 +1,41 @@
+model:
+  name: "resnet34_tinyimagenet"
+  num_classes: 200
+
+dataset:
+  name: "tiny_imagenet"
+  data_root: "/home/voz/shared/database/vision/tiny-imagenet-200"
+  batch_size: 256
+  num_workers: 8
+  has_val: false
+  split_protocol:
+    type: "class_forget"
+    forget_classes: &forget_classes [0,1,2,3,4,5,6,7,8,9]
+
+deterministic: true
+
+method:
+  name: unsir
+
+  # Noise learning - Minimal
+  noise_batch_size: 16
+  noise_iters: 20              # DECREASED from 25
+  noise_lr: 0.01
+  noise_l2_lambda: 0.2         # INCREASED from 0.15 (more regularization = weaker noise)
+  noise_clamp: 2.0             # DECREASED from 2.5
+  noise_copies: 15             # DECREASED from 20
+
+  # Impair/Repair - Maximum repair priority
+  impair_epochs: 8             
+  repair_epochs: 8             # INCREASED from 5 to 8
+  impair_lr: 0.003             # DECREASED from 0.005 to 0.003
+  repair_lr: 0.008             # INCREASED from 0.005 to 0.008
+  weight_decay: 0.0
+  momentum: 0.9
+  max_norm: 0.0
+
+  # Retain subset - use more data
+  samples_per_retain_class: 450  # INCREASED from 400
+
+  # classes (ids) to forget:
+  forget_classes: *forget_classes

@@ -1,0 +1,29 @@
+model:
+  name: "wrn_28_10"
+  num_classes: 100
+
+dataset:
+  name: "cifar100"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+  
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.1
+
+deterministic: true
+
+method:
+  name: representation_unlearning
+  
+  # --- Architecture Options ---
+  arch_type: "linear"          # "mlp" or "linear"
+  
+  # --- Training Params ---
+  epochs: 10
+  lr: 0.001
+  beta: 0.1
+  n_samples: 1
+  zero_shot: true

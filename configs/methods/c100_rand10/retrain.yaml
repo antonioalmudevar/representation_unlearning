@@ -1,0 +1,31 @@
+model:
+  name: "wrn_28_10"
+  num_classes: 100
+
+dataset:
+  name: "cifar100"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+  
+  split_protocol:
+    type: "random_forget"
+    forget_ratio: 0.10
+
+deterministic: true
+
+method:
+  name: retrain
+  epochs: 200
+  lr: 0.001
+  weight_decay: 0.0005
+  max_norm: 0.0
+  
+  optimizer: adamw
+  optimizer_cfg:
+    betas: [0.9, 0.999]
+  
+  scheduler: cosine
+  scheduler_cfg:
+    warmup_epochs: 0
