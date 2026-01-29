@@ -1,0 +1,29 @@
+model:
+  name: "resnet18_cifar"
+  num_classes: 10
+
+dataset:
+  name: "cifar10"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: representation_unlearning
+  
+  # --- Architecture Options ---
+  arch_type: "linear"          # "mlp" or "linear"
+  
+  # --- Training Params ---
+  epochs: 5
+  lr: 0.001
+  beta: 0.001
+  n_samples: 1
+  zero_shot: false

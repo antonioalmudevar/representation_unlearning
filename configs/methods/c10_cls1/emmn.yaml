@@ -1,0 +1,33 @@
+model:
+  name: "resnet18_cifar"
+  num_classes: 10
+
+dataset:
+  name: "cifar10"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: error_minmax_noise
+  
+  # Noise generation parameters
+  noise_batch_size: 256
+  noise_steps: 400
+  noise_lr: 0.1
+  noise_lr_decay: 0.5
+  noise_patience: 50
+  lambda_reg: 0.01
+  
+  # Model impair parameters (CIFAR-10: 2 steps, lr=0.01)
+  impair_steps: 2
+  impair_lr: 0.01
+  weight_decay: 0.0001
+  max_norm: 0.0

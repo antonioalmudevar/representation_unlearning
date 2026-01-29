@@ -1,0 +1,33 @@
+model:
+  name: "resnet18_cifar" # Assuming ResNet or similar architecture
+  num_classes: 10
+
+dataset:
+  name: "cifar10"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+  
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0] # Unlearning Class 0
+
+deterministic: true
+
+method:
+  name: gkt
+  
+  # Optimization (Snippet matches)
+  lr: 0.001
+  batch_size: 256
+  
+  # GKT Specifics
+  z_dim: 128
+  n_pseudo_batches: 4000  # These are CYCLES. Total steps = 4000 * 11 = 44,000.
+  n_generator_iter: 1
+  n_student_iter: 10
+  
+  at_beta: 250.0
+  kl_temperature: 1.0
+  threshold: 0.01         # Strict threshold works because we train for much longer

@@ -1,0 +1,53 @@
+model:
+  name: "resnet18_cifar"
+  num_classes: 10
+
+dataset:
+  name: "cifar10"
+  data_root: "/home/voz/shared/database/vision"
+  batch_size: 256
+  num_workers: 8
+  has_val: true
+
+  split_protocol:
+    type: "class_forget"
+    forget_classes: [0]
+
+deterministic: true
+
+method:
+  name: sisa
+  
+  # Core SISA parameters (aligned with paper defaults)
+  shards: 10                    # S: number of shards (paper default: 10)
+  slices: 5                     # R: number of slices per shard (paper default: 5)
+  epochs_per_slice: 2           # e_i: epochs per slice
+                                # Note: Paper recommends e = (2*R)/(R+1) * e_0 for fair comparison
+                                # For R=5, this gives e ≈ 1.67 * e_0
+                                # If you want 10 total epochs equivalent, use: 10 * (2*5)/(5+1) ≈ 16.7 total
+                                # Distributed as: 16.7 / 5 ≈ 3.3 epochs per slice
+  
+  # Training hyperparameters (aligned with paper Table II defaults)
+  lr: 0.1                       # Learning rate (paper default: 0.1)
+  momentum: 0.9                 # SGD momentum (paper default: 0.9)
+  weight_decay: 0.0005          # Weight decay / L2 regularization (paper: 5e-4)
+  
+  # Aggregation strategy
+  aggregation: "logits"         # "logits" (avg prediction vectors) or "vote" (majority label)
+                                # Paper recommends "logits" for better accuracy
+  
+  # Data handling
+  batch_size: 128               # Batch size for constituent models (can be smaller than main batch_size)
+  shuffle_seed: 42              # Random seed for data shuffling
+  num_workers: 4                # DataLoader workers
+  pin_memory: true              # Pin memory for faster GPU transfer
+  
+  # Logging
+  verbose: true                 # Print training progress
+
+# Additional notes:
+# 1. The paper shows that sharding provides speedup when K < 3*S (K = unlearning requests)
+# 2. For simple tasks (MNIST, SVHN, Purchase): S=20 shards works well with <2% accuracy loss
+# 3. For complex tasks (ImageNet): S=10 shards recommended, may need transfer learning
+# 4. Slicing always provides speedup with minimal storage overhead
+# 5. Expected speedup: (R+1)*S/2 for single request, degrades as requests increase
