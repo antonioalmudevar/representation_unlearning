@@ -135,7 +135,7 @@ class RepresentationUnlearning(IUnlearningMethod):
         self.epochs = int(hp.get("epochs", 5))
         self.lr = float(hp.get("lr", 1e-3))
         self.beta = float(hp.get("beta", 1.0))
-        self.noise_scale = float(hp.get("noise_scale", 0.0))
+        self.noise_scale = float(hp.get("noise_scale", 0.1))
         self.n_samples = int(hp.get("n_samples", 5))
         
         # --- Architecture Configuration ---
@@ -154,8 +154,7 @@ class RepresentationUnlearning(IUnlearningMethod):
         
         # Compute Class Counts (Nc)
         self.class_counts = self._get_class_counts(retain_loader, forget_loader, self.num_classes)
-        print(f"[RepresentationUnlearning] Class counts (Nc): {self.class_counts.cpu().tolist()}")
-
+        
         if self.zero_shot:
             print("[RepresentationUnlearning] Zero-shot mode enabled. Using Neural Collapse proxies.")
             self.class_prototypes = self._extract_prototypes(self.original_model).to(self.device)

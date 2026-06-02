@@ -12,6 +12,9 @@ from .gkt import GKT
 from .emmn import ErrorMinMaxNoise
 from .boundary_shrink import BoundaryShrink
 from .representation import RepresentationUnlearning
+from .amun import AMUN
+from .langevin_unlearning import LangevinUnlearning
+from .natmu import NatMU
 
 METHODS = {
     "retrain": Retrain,
@@ -28,6 +31,10 @@ METHODS = {
     "boundary_shrink": BoundaryShrink,
     "error_minmax_noise": ErrorMinMaxNoise,
     "representation_unlearning": RepresentationUnlearning,
+    "amun": AMUN,
+    "langevin_unlearning": LangevinUnlearning,
+    "langevin": LangevinUnlearning,
+    "natmu": NatMU,
 }
 
 def get_method(name: str):
